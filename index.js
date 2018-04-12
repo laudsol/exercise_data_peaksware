@@ -1,29 +1,25 @@
-console.log(workoutData)
-
-const oneMinute = 1000 * 60
-let sumPower = 0
-let counter = 0
-let beginTime = 0
+const oneMinute = 60 * 1000
+let powerArray = []
+let beginTime = 1000
 
 let oneMinAvgs = []
 
 
 workoutData.samples.forEach(second => {
-    if(counter !== oneMinute/1000){
-        sumPower += second.values.power
-        counter += 1
+    if((second.millisecondOffset - beginTime + 1000) <= oneMinute){
+        powerArray.push(second.values.power)
     } else {
         let powerObj = {
-            begin: beginTime/1000/60,
-            end: (second.millisecondOffset - 1000)/1000/60,
-            avgPower: sumPower/counter
+            counter,
+            begin: beginTime/1000,
+            end: (second.millisecondOffset - 1000)/1000,
+            avgPower: powerArray.reduce((acc, curr) => acc + curr) / powerArray.length
         }
 
         oneMinAvgs.push(powerObj)
-        counter = 1
-        sumPower = second.values.power
+        powerArray = [second.values.power]
         beginTime = second.millisecondOffset
     }
 })
 
-console.log('twentyMinAvgs', oneMinAvgs)
+oneMinAvgs.forEach(minute => console.log(minute))
