@@ -1,43 +1,98 @@
-let powerData = workoutData.samples
-let oneMinute = 60
-let timeInput = 20 * oneMinute
+const powerData = workoutData.samples
+const oneMinute = 60
+const timeInput = 20 * oneMinute
 
-const iteratePowerData = (powerData, timeInput) => {
-    let timeSegmentedPowerAverage = []
-    let maxAvgPowerOverTimeSegment = 0
-    
+const time = (data, index) => {
+    return data[index].millisecondOffset/1000
+}
+
+const average = (data) => {
+    return data.reduce((acc, curr) => {return acc + curr}) / data.length
+}
+
+const getBestTime = (powerData, timeInput) => {
+    let maxAvgPower = {avgPower: 0}
+
     for(let i = 0; i < powerData.length; i++){
         let avgPowerObj = {
-            start: powerData[i].millisecondOffset/1000,
+            start: time(powerData, i),
             end: '',
             avgPower: '',
         }
 
-        let avgPowerCalc = []
+        let powerBySecondArr = []
 
         for(let j = i; j < powerData.length - i; j++){
-            if(avgPowerObj.start + timeInput > powerData[j].millisecondOffset/1000){
-                avgPowerCalc.push(powerData[j].values.power)
-                avgPowerObj.end = powerData[j].millisecondOffset/1000
+            if(avgPowerObj.start + timeInput > time(powerData, j)){
+                powerBySecondArr.push(powerData[j].values.power)
+                avgPowerObj.end = time(powerData, j)
             }
         }
 
-        if(avgPowerCalc.length > 0 && avgPowerObj.start + timeInput -1 === avgPowerObj.end){
-            avgPowerObj.avgPower = avgPowerCalc.reduce((acc, curr) => {return acc + curr}) / avgPowerCalc.length
-            timeSegmentedPowerAverage.push(avgPowerObj)
+        if(avgPowerObj.start + timeInput -1 === avgPowerObj.end){
+            avgPowerObj.avgPower = average(powerBySecondArr)
             
-            if(avgPowerObj.avgPower > maxAvgPowerOverTimeSegment){
-                maxAvgPowerOverTimeSegment = avgPowerObj.avgPower
+            if(avgPowerObj.avgPower > maxAvgPower.avgPower){
+                maxAvgPower = avgPowerObj
             }
         }
+    }
 
-    }
-    return {
-        allData: timeSegmentedPowerAverage,
-        max: maxAvgPowerOverTimeSegment
-    }
+    return  maxAvgPower
 }
 
-let timeSegmentedPowerdata = iteratePowerData(powerData, timeInput)
+let bestTime = getBestTime(powerData, timeInput)
 
-console.log(timeSegmentedPowerdata)
+const graphPowerData = powerData
+    .map(second => second.values.power)
+    .filter(power => power !== undefined)
+console.log(graphPowerData)
+
+const buildGraph = () => {
+    $('#container').highcharts({
+        title: {
+            text: 'Power over workout time'
+        },
+        yAxis: {
+            title: {
+                text: 'Power'
+            }
+        },
+        legend: {
+            layout: 'vertical',
+            align: 'right',
+            verticalAlign: 'middle'
+        },
+    
+        plotOptions: {
+            series: {
+                label: {
+                    connectorAllowed: false
+                },
+                pointStart: 0
+            }
+        },
+    
+        series: [{
+            name: 'power',
+            data: graphPowerData
+        }],
+    
+        responsive: {
+            rules: [{
+                condition: {
+                    maxWidth: 500
+                },
+                chartOptions: {
+                    legend: {
+                        layout: 'horizontal',
+                        align: 'center',
+                        verticalAlign: 'bottom'
+                    }
+                }
+            }]
+        }
+    })
+}
+
+buildGraph()
