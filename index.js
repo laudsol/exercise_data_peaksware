@@ -2,9 +2,9 @@ let powerData = workoutData.samples
 let oneMinute = 60
 let timeInput = 20 * oneMinute
 
-const itteratePowerData = (powerData, timeInput) => {
+const iteratePowerData = (powerData, timeInput) => {
     let timeSegmentedPowerAverage = []
-    let maxAvgPowerOverTimeSegment = {avgPower: 0}
+    let maxAvgPowerOverTimeSegment = 0
     
     for(let i = 0; i < powerData.length; i++){
         let avgPowerObj = {
@@ -17,7 +17,6 @@ const itteratePowerData = (powerData, timeInput) => {
 
         for(let j = i; j < powerData.length - i; j++){
             if(avgPowerObj.start + timeInput > powerData[j].millisecondOffset/1000){
-
                 avgPowerCalc.push(powerData[j].values.power)
                 avgPowerObj.end = powerData[j].millisecondOffset/1000
             }
@@ -26,15 +25,19 @@ const itteratePowerData = (powerData, timeInput) => {
         if(avgPowerCalc.length > 0 && avgPowerObj.start + timeInput -1 === avgPowerObj.end){
             avgPowerObj.avgPower = avgPowerCalc.reduce((acc, curr) => {return acc + curr}) / avgPowerCalc.length
             timeSegmentedPowerAverage.push(avgPowerObj)
+            
+            if(avgPowerObj.avgPower > maxAvgPowerOverTimeSegment){
+                maxAvgPowerOverTimeSegment = avgPowerObj.avgPower
+            }
         }
 
-        if(avgPowerObj.avgPower > maxAvgPowerOverTimeSegment.avgPower){
-            maxAvgPowerOverTimeSegment = avgPowerObj
-        }
     }
-    return [timeSegmentedPowerAverage, maxAvgPowerOverTimeSegment]
+    return {
+        allData: timeSegmentedPowerAverage,
+        max: maxAvgPowerOverTimeSegment
+    }
 }
 
-let timeSegmentedPowerdata = itteratePowerData(powerData, timeInput)
+let timeSegmentedPowerdata = iteratePowerData(powerData, timeInput)
 
 console.log(timeSegmentedPowerdata)
