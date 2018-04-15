@@ -18,3 +18,10 @@ The purpose of this test is to demonstrate your understanding of JavaScript web 
 
 ## Submission
 Please submit your test as an emailed zip file or link to a private repo or private file sharing system. You can also provide a hosted link or it can run locally.
+
+
+#Sols comments
+1) How to account for event type "start" and "stop" when clearly have multiple start/stops? Assume its all part of one workout since time values fairly close to each other
+2) If start out by breaking up into one minute averages, how to control for sub-averages with smaller N's? Can see that the N's are, on the whole, smillar, and that numbers hold. 
+2) If start out by breaking up into one minute averages, how to control for sub-averages with smaller N's? Can see that the N's are, on the whole, smillar, so assume that the reflected averages are indeed accurate. 
+
