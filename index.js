@@ -48,7 +48,7 @@ const graphPowerData = powerData
 const buildGraph = () => {
     $('#powerChart').highcharts({
         title: {
-            text: 'Power over workout time'
+            text: 'Power generated during workout'
         },
         yAxis: {
             title: {
@@ -71,23 +71,28 @@ const buildGraph = () => {
         },
     
         series: [{
-            name: ' Power Output',
+            name: 'Power Output',
             data: graphPowerData
         },{
             name: bestTimeGraphData[0].type,
-            data: bestTimeGraphData[0].data
+            data: bestTimeGraphData[0].data,
+            connectEnds: false
         },{
             name: bestTimeGraphData[1].type,
-            data: bestTimeGraphData[1].data
+            data: bestTimeGraphData[1].data,
+            connectEnds: false
         },{
             name: bestTimeGraphData[2].type,
-            data: bestTimeGraphData[2].data
+            data: bestTimeGraphData[2].data,
+            connectEnds: false
         },{
             name: bestTimeGraphData[3].type,
-            data: bestTimeGraphData[3].data
+            data: bestTimeGraphData[3].data,
+            connectEnds: false
         },{
             name: bestTimeGraphData[4].type,
-            data: bestTimeGraphData[4].data
+            data: bestTimeGraphData[4].data,
+            connectEnds: false
         }],
     
         responsive: {
@@ -115,7 +120,7 @@ const bestTimeGraphData = bestTimeSegments.map(timeSegment => {
         if(second.millisecondOffset/1000 >= bestTime.start && second.millisecondOffset/1000 <= bestTime.end){
             return bestTime.avgPower
         } else {
-            return 0
+            return null
         }
     })
     
