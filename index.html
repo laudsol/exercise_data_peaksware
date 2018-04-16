@@ -25,13 +25,18 @@
     <script>
         function initMap() {
             var map = new google.maps.Map(document.getElementById('workoutMap'), {
-                zoom: 4,
-                center: uluru
+                zoom: 12,
+                center: center
             });
-            var marker = new google.maps.Marker({
-                position: uluru,
-                map: map
-            });
+
+            var marker
+
+            for (let i = 0; i < gpsData.length; i++){
+                marker = new google.maps.Marker({
+                    position: new google.maps.LatLng(gpsData[i][0], gpsData[i][1]),
+                    map: map
+                }) 
+            }
         }
         </script>
         <script async defer

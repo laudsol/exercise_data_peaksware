@@ -94,6 +94,22 @@ const buildGraph = () => {
     })
 }
 
-const uluru = {lat: -25.363, lng: 131.044};
+let locations = [
+    [-33.890542, 151.274856],
+    [-33.923036, 151.259052],
+    [-34.028249, 151.157507]
+]
+
+
+let gpsData = powerData
+.map((second) => {
+    return [second.values.positionLat, second.values.positionLong] 
+})
+.filter(position => position[0] !== undefined && position[1] !== undefined)
+
+let center = {
+    lat: gpsData[0][0], 
+    lng:gpsData[0][1]
+}
 
 buildGraph()
