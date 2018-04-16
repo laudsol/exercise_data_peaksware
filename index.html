@@ -3,20 +3,39 @@
 <head>
     <meta charset="UTF-8">
     <script defer src="index.js"></script>
+    
     <script
         src="https://code.jquery.com/jquery-3.3.1.js"
         integrity="sha256-2Kok7MbOyxpgUVvAk/HJ2jigOSYS2auK4Pfzbm7uH60="
         crossorigin="anonymous">
     </script>
+    
     <script type="text/javascript" src="workout-data.js"></script>
     
     <!-- HighCard CDN -->
     <script src="http://code.highcharts.com/highcharts.js"></script>
     <script src="http://code.highcharts.com/modules/exporting.js"></script>
-    <title>Document</title>
+
+    
+    <title>Peaksware code test</title>
 </head>
 <body>
-    <div>Hello World</div>
-    <div id="container" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="powerChart" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <div id="workoutMap" style="min-width: 310px; height: 400px; margin: 0 auto"></div>
+    <script>
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('workoutMap'), {
+                zoom: 4,
+                center: uluru
+            });
+            var marker = new google.maps.Marker({
+                position: uluru,
+                map: map
+            });
+        }
+        </script>
+        <script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCiz5_ehGpnWB-w9mLlfausAjOQngrigK0&callback=initMap">
+        </script>
 </body>
 </html>

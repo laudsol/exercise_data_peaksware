@@ -41,15 +41,14 @@ const getBestTime = (powerData, timeInput) => {
     return  maxAvgPower
 }
 
-let bestTime = getBestTime(powerData, timeInput)
+const bestTime = getBestTime(powerData, timeInput)
 
 const graphPowerData = powerData
     .map(second => second.values.power)
     .filter(power => power !== undefined)
-console.log(graphPowerData)
 
 const buildGraph = () => {
-    $('#container').highcharts({
+    $('#powerChart').highcharts({
         title: {
             text: 'Power over workout time'
         },
@@ -94,5 +93,7 @@ const buildGraph = () => {
         }
     })
 }
+
+const uluru = {lat: -25.363, lng: 131.044};
 
 buildGraph()
