@@ -1,6 +1,6 @@
 const powerData = workoutData.samples
 const oneMinute = 60
-const timeInput = 20 * oneMinute
+const bestTimeSegments = [1,5,10,15,20]
 
 const time = (data, index) => {
     return data[index].millisecondOffset/1000
@@ -41,8 +41,6 @@ const getBestTime = (powerData, timeInput) => {
     return  maxAvgPower
 }
 
-const bestTime = getBestTime(powerData, timeInput)
-
 const graphPowerData = powerData
     .map(second => second.values.power)
     .filter(power => power !== undefined)
@@ -73,8 +71,23 @@ const buildGraph = () => {
         },
     
         series: [{
-            name: 'power',
+            name: ' Power Output',
             data: graphPowerData
+        },{
+            name: bestTimeGraphData[0].type,
+            data: bestTimeGraphData[0].data
+        },{
+            name: bestTimeGraphData[1].type,
+            data: bestTimeGraphData[1].data
+        },{
+            name: bestTimeGraphData[2].type,
+            data: bestTimeGraphData[2].data
+        },{
+            name: bestTimeGraphData[3].type,
+            data: bestTimeGraphData[3].data
+        },{
+            name: bestTimeGraphData[4].type,
+            data: bestTimeGraphData[4].data
         }],
     
         responsive: {
@@ -93,6 +106,24 @@ const buildGraph = () => {
         }
     })
 }
+
+
+const bestTimeGraphData = bestTimeSegments.map(timeSegment => {
+    let bestTime = getBestTime(powerData, timeSegment * oneMinute)
+
+    let bestTimeData = powerData.map(second => {
+        if(second.millisecondOffset/1000 >= bestTime.start && second.millisecondOffset/1000 <= bestTime.end){
+            return bestTime.avgPower
+        } else {
+            return 0
+        }
+    })
+    
+    return {
+        type: `Best ${timeSegment} minute avg power`,
+        data: bestTimeData,
+    }
+})
 
 const gpsData = powerData
     .map((second) => {
